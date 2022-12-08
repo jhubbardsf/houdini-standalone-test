@@ -25,7 +25,7 @@ export declare class Cache {
     };
     subscribe(spec: SubscriptionSpec, variables?: {}): void;
     unsubscribe(spec: SubscriptionSpec, variables?: {}): void;
-    list(name: string, parentID?: string | {}): ListCollection;
+    list(name: string, parentID?: string, allLists?: boolean): ListCollection;
     delete(id: string): void;
     setConfig(config: ConfigFile): void;
 }

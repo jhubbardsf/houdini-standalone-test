@@ -5,6 +5,7 @@ export declare class HoudiniClient {
     private fetchFn;
     socket: SubscriptionHandler | null | undefined;
     constructor(networkFn: RequestHandler<any>, subscriptionHandler?: SubscriptionHandler | null);
+    handleMultipart(params: FetchParams, args: Parameters<FetchContext['fetch']>): Parameters<FetchContext['fetch']> | undefined;
     sendRequest<_Data>(ctx: FetchContext, params: FetchParams): Promise<RequestPayloadMagic<_Data>>;
 }
 export declare class Environment extends HoudiniClient {
@@ -53,11 +54,12 @@ export declare type RequestHandlerArgs = FetchContext & FetchParams & {
     session?: App.Session;
 };
 export declare type RequestHandler<_Data> = (args: RequestHandlerArgs) => Promise<RequestPayload<_Data>>;
-export declare function executeQuery<_Data extends GraphQLObject, _Input extends {}>({ client, artifact, variables, session, cached, fetch, metadata, }: {
+export declare function executeQuery<_Data extends GraphQLObject, _Input extends {}>({ client, artifact, variables, session, setFetching, cached, fetch, metadata, }: {
     client: HoudiniClient;
     artifact: QueryArtifact | MutationArtifact;
     variables: _Input;
     session: any;
+    setFetching: (fetching: boolean) => void;
     cached: boolean;
     config: ConfigFile;
     fetch?: typeof globalThis.fetch;
@@ -66,11 +68,12 @@ export declare function executeQuery<_Data extends GraphQLObject, _Input extends
     result: RequestPayload;
     partial: boolean;
 }>;
-export declare function fetchQuery<_Data extends GraphQLObject, _Input extends {}>({ client, artifact, variables, cached, policy, context, }: {
+export declare function fetchQuery<_Data extends GraphQLObject, _Input extends {}>({ client, context, artifact, variables, setFetching, cached, policy, }: {
     client: HoudiniClient;
     context: FetchContext;
     artifact: QueryArtifact | MutationArtifact;
     variables: _Input;
+    setFetching: (fetching: boolean) => void;
     cached?: boolean;
     policy?: CachePolicy;
 }): Promise<FetchQueryResult<_Data>>;

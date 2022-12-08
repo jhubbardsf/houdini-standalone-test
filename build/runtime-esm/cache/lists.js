@@ -9,22 +9,31 @@ class ListManager {
   }
   lists = /* @__PURE__ */ new Map();
   listsByField = /* @__PURE__ */ new Map();
-  get(listName, id) {
+  get(listName, id, allLists) {
     const matches = this.lists.get(listName);
     if (!matches || matches.size === 0) {
       return null;
     }
-    const head = [...matches.values()][0];
-    if (matches?.size === 1) {
-      return head;
-    }
-    if (!id) {
-      throw new Error(
-        `Found multiple instances of "${listName}". Please provide a parentID that corresponds to the object containing the field marked with @list or @paginate.`
+    if (allLists) {
+      return new ListCollection(
+        Array.from(matches, ([key, value]) => [...value.lists]).flat()
       );
     }
+    const head = [...matches.values()][0];
     const { recordType } = head.lists[0];
     const parentID = id ? this.cache._internal_unstable.id(recordType || "", id) : this.rootID;
+    if (matches?.size === 1) {
+      if (!id) {
+        return head;
+      }
+      return parentID === Array.from(matches.keys())[0] ? head : null;
+    }
+    if (!id) {
+      console.error(
+        `Found multiple instances of "${listName}". Please provide one of @parentID or @allLists directives to help identify which list you want modify. For more information, visit this guide: https://www.houdinigraphql.com/api/graphql#parentidvalue-string `
+      );
+      return null;
+    }
     return this.lists.get(listName)?.get(parentID);
   }
   remove(listName, id) {

@@ -1,33 +1,32 @@
-import * as graphql from 'graphql';
 import { Config, CollectedGraphQLDocument } from '../../lib';
 export default function paginate(config: Config, documents: CollectedGraphQLDocument[]): Promise<void>;
 export declare const pageInfoSelection: {
-    kind: graphql.Kind;
+    kind: "Field";
     name: {
-        kind: graphql.Kind;
+        kind: "Name";
         value: string;
     };
     selectionSet: {
-        kind: graphql.Kind;
+        kind: "SelectionSet";
         selections: ({
-            kind: graphql.Kind;
+            kind: "Field";
             name: {
-                kind: graphql.Kind;
+                kind: "Name";
                 value: string;
             };
             selectionSet?: undefined;
         } | {
-            kind: graphql.Kind;
+            kind: "Field";
             name: {
-                kind: graphql.Kind;
+                kind: "Name";
                 value: string;
             };
             selectionSet: {
-                kind: graphql.Kind;
+                kind: "SelectionSet";
                 selections: {
-                    kind: graphql.Kind;
+                    kind: "Field";
                     name: {
-                        kind: graphql.Kind;
+                        kind: "Name";
                         value: string;
                     };
                 }[];

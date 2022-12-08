@@ -17,6 +17,8 @@ export declare class Config {
     cacheBufferSize?: number;
     defaultCachePolicy: CachePolicy;
     defaultPartial: boolean;
+    internalListPosition: 'first' | 'last';
+    defaultListTarget: 'all' | null;
     definitionsFolder?: string;
     newSchema: string;
     newDocuments: string;
@@ -80,6 +82,7 @@ export declare class Config {
     get listAppendDirective(): string;
     get listParentDirective(): string;
     get listDirectiveParentIDArg(): string;
+    get listAllListsDirective(): string;
     get listNameArg(): string;
     get insertFragmentSuffix(): string;
     get removeFragmentSuffix(): string;

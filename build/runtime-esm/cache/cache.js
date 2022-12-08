@@ -67,8 +67,8 @@ class Cache {
       variables
     );
   }
-  list(name, parentID) {
-    const handler = this._internal_unstable.lists.get(name, parentID);
+  list(name, parentID, allLists) {
+    const handler = this._internal_unstable.lists.get(name, parentID, allLists);
     if (!handler) {
       throw new Error(
         `Cannot find list with name: ${name}${parentID ? " under parent " + parentID : ""}. Is it possible that the query is not mounted?`
@@ -112,7 +112,7 @@ class CacheInternal {
     this.cache = cache;
     this.lifetimes = lifetimes;
     try {
-      this._disabled = process.env.TEST !== "true";
+      this._disabled = process.env.HOUDINI_TEST !== "true";
     } catch {
       this._disabled = typeof globalThis.window === "undefined";
     }
@@ -210,7 +210,8 @@ class CacheInternal {
             parent: linkedID,
             selection: fields,
             subscribers: currentSubscribers,
-            variables
+            variables,
+            parentType: linkedType
           });
           toNotify.push(...currentSubscribers);
         }
@@ -316,7 +317,8 @@ class CacheInternal {
             parent: id,
             selection: fields,
             subscribers: currentSubscribers,
-            variables
+            variables,
+            parentType: linkedType
           });
         }
       }
@@ -333,15 +335,15 @@ class CacheInternal {
             parentID = id;
           }
         }
-        if (operation.list && !this.lists.get(operation.list, parentID)) {
+        if (operation.list && !this.lists.get(operation.list, parentID, operation.target === "all")) {
           continue;
         }
         const targets = Array.isArray(value) ? value : [value];
         for (const target of targets) {
           if (operation.action === "insert" && target instanceof Object && fields && operation.list) {
-            this.cache.list(operation.list, parentID).when(operation.when).addToList(fields, target, variables, operation.position || "last");
+            this.cache.list(operation.list, parentID, operation.target === "all").when(operation.when).addToList(fields, target, variables, operation.position || "last");
           } else if (operation.action === "remove" && target instanceof Object && fields && operation.list) {
-            this.cache.list(operation.list, parentID).when(operation.when).remove(target, variables);
+            this.cache.list(operation.list, parentID, operation.target === "all").when(operation.when).remove(target, variables);
           } else if (operation.action === "delete" && operation.type) {
             if (typeof target !== "string") {
               throw new Error("Cannot delete a record with a non-string ID");
@@ -352,7 +354,7 @@ class CacheInternal {
             }
             this.cache.delete(targetID);
           } else if (operation.action === "toggle" && target instanceof Object && fields && operation.list) {
-            this.cache.list(operation.list, parentID).when(operation.when).toggleElement(fields, target, variables, operation.position || "last");
+            this.cache.list(operation.list, parentID, operation.target === "all").when(operation.when).toggleElement(fields, target, variables, operation.position || "last");
           }
         }
       }

@@ -24,11 +24,12 @@ export declare class InMemorySubscriptions {
         parentType: string;
         variables: GraphQLObject;
     }): void;
-    addMany({ parent, selection, variables, subscribers, }: {
+    addMany({ parent, selection, variables, subscribers, parentType, }: {
         parent: string;
         selection: SubscriptionSelection;
         variables: {};
         subscribers: SubscriptionSpec[];
+        parentType: string;
     }): void;
     get(id: string, field: string): SubscriptionSpec[];
     remove(id: string, fields: SubscriptionSelection, targets: SubscriptionSpec[], variables: {}, visited?: string[]): void;

@@ -122,10 +122,11 @@ class InMemorySubscriptions {
     parent,
     selection,
     variables,
-    subscribers
+    subscribers,
+    parentType
   }) {
     for (const fieldSelection of Object.values(selection)) {
-      const { keyRaw, fields } = fieldSelection;
+      const { type: linkedType, keyRaw, fields } = fieldSelection;
       const key = (0, import_stuff.evaluateKey)(keyRaw, variables);
       for (const spec of subscribers) {
         this.addFieldSubscription({
@@ -133,7 +134,7 @@ class InMemorySubscriptions {
           key,
           selection: fieldSelection,
           spec,
-          parentType: "asdf",
+          parentType,
           variables
         });
       }
@@ -148,7 +149,8 @@ class InMemorySubscriptions {
             parent: linkedRecord,
             selection: fields,
             variables,
-            subscribers
+            subscribers,
+            parentType: linkedType
           });
         }
       }

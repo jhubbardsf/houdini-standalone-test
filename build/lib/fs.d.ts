@@ -1,6 +1,8 @@
 /// <reference types="node" />
 /// <reference types="glob" />
 import fsExtra from 'fs-extra';
+export declare function copyFileSync(src: string, dest: string): void | null;
+export declare function copyFile(src: string, dest: string): Promise<void | null>;
 export declare function readFile(filepath: string): Promise<string | null>;
 export declare function readFileSync(filepath: string): string | null;
 export declare function writeFile(filepath: string, data: string): Promise<void>;

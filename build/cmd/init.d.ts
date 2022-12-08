@@ -1,4 +1,4 @@
 export default function init(_path: string | undefined, args: {
     headers?: string[];
-    yes: boolean;
-}, withRunningCheck?: boolean): Promise<void>;
+    force_remote_endpoint?: boolean;
+}): Promise<void>;

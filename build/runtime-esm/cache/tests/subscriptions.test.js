@@ -1,5 +1,6 @@
 import { test, expect, vi } from "vitest";
 import { testConfigFile } from "../../../test";
+import { RefetchUpdateMode } from "../../lib";
 import { Cache } from "../cache";
 const config = testConfigFile();
 test("root subscribe - field change", function() {
@@ -1362,6 +1363,106 @@ test("clearing a display layer updates subscribers", function() {
       id: "1"
     }
   });
+});
+test("ensure parent type is properly passed for nested lists", function() {
+  const cache = new Cache(config);
+  const selection = {
+    cities: {
+      type: "City",
+      keyRaw: "cities",
+      list: {
+        name: "City_List",
+        connection: false,
+        type: "City"
+      },
+      update: RefetchUpdateMode.append,
+      fields: {
+        id: {
+          type: "ID",
+          keyRaw: "id"
+        },
+        name: {
+          type: "String",
+          keyRaw: "name"
+        },
+        libraries: {
+          type: "Library",
+          keyRaw: "libraries",
+          update: RefetchUpdateMode.append,
+          list: {
+            name: "Library_List",
+            connection: false,
+            type: "Library"
+          },
+          fields: {
+            id: {
+              type: "ID",
+              keyRaw: "id"
+            },
+            name: {
+              type: "String",
+              keyRaw: "name"
+            },
+            books: {
+              type: "Book",
+              keyRaw: "books",
+              list: {
+                name: "Book_List",
+                connection: false,
+                type: "Book"
+              },
+              fields: {
+                id: {
+                  type: "ID",
+                  keyRaw: "id"
+                },
+                title: {
+                  type: "String",
+                  keyRaw: "title"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  };
+  const set = vi.fn();
+  cache.subscribe({
+    rootType: "Query",
+    selection,
+    set
+  });
+  cache.write({
+    selection,
+    data: {
+      cities: [
+        {
+          id: "1",
+          name: "Alexandria",
+          libraries: [
+            {
+              id: "1",
+              name: "The Library of Alexandria",
+              books: []
+            },
+            {
+              id: "2",
+              name: "Bibliotheca Alexandrina",
+              books: []
+            }
+          ]
+        },
+        {
+          id: "2",
+          name: "Aalborg",
+          libraries: []
+        }
+      ]
+    }
+  });
+  expect(() => cache.list("Library_List", "2")).not.toThrow();
+  expect(() => cache.list("Book_List", "2")).not.toThrow();
 });
 test.todo("can write to and resolve layers");
 test.todo("resolving a layer with the same value as the most recent doesn't notify subscribers");

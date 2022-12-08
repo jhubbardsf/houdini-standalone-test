@@ -1,6 +1,7 @@
 "use strict";
 var import_vitest = require("vitest");
 var import_test = require("../../../test");
+var import_lib = require("../../lib");
 var import_cache = require("../cache");
 const config = (0, import_test.testConfigFile)();
 (0, import_vitest.test)("root subscribe - field change", function() {
@@ -1363,6 +1364,106 @@ const config = (0, import_test.testConfigFile)();
       id: "1"
     }
   });
+});
+(0, import_vitest.test)("ensure parent type is properly passed for nested lists", function() {
+  const cache = new import_cache.Cache(config);
+  const selection = {
+    cities: {
+      type: "City",
+      keyRaw: "cities",
+      list: {
+        name: "City_List",
+        connection: false,
+        type: "City"
+      },
+      update: import_lib.RefetchUpdateMode.append,
+      fields: {
+        id: {
+          type: "ID",
+          keyRaw: "id"
+        },
+        name: {
+          type: "String",
+          keyRaw: "name"
+        },
+        libraries: {
+          type: "Library",
+          keyRaw: "libraries",
+          update: import_lib.RefetchUpdateMode.append,
+          list: {
+            name: "Library_List",
+            connection: false,
+            type: "Library"
+          },
+          fields: {
+            id: {
+              type: "ID",
+              keyRaw: "id"
+            },
+            name: {
+              type: "String",
+              keyRaw: "name"
+            },
+            books: {
+              type: "Book",
+              keyRaw: "books",
+              list: {
+                name: "Book_List",
+                connection: false,
+                type: "Book"
+              },
+              fields: {
+                id: {
+                  type: "ID",
+                  keyRaw: "id"
+                },
+                title: {
+                  type: "String",
+                  keyRaw: "title"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  };
+  const set = import_vitest.vi.fn();
+  cache.subscribe({
+    rootType: "Query",
+    selection,
+    set
+  });
+  cache.write({
+    selection,
+    data: {
+      cities: [
+        {
+          id: "1",
+          name: "Alexandria",
+          libraries: [
+            {
+              id: "1",
+              name: "The Library of Alexandria",
+              books: []
+            },
+            {
+              id: "2",
+              name: "Bibliotheca Alexandrina",
+              books: []
+            }
+          ]
+        },
+        {
+          id: "2",
+          name: "Aalborg",
+          libraries: []
+        }
+      ]
+    }
+  });
+  (0, import_vitest.expect)(() => cache.list("Library_List", "2")).not.toThrow();
+  (0, import_vitest.expect)(() => cache.list("Book_List", "2")).not.toThrow();
 });
 import_vitest.test.todo("can write to and resolve layers");
 import_vitest.test.todo("resolving a layer with the same value as the most recent doesn't notify subscribers");

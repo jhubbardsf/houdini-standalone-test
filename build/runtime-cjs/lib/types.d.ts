@@ -99,6 +99,7 @@ export declare type MutationOperation = {
         value: string;
     };
     position?: 'first' | 'last';
+    target?: 'all';
     when?: ListWhen;
 };
 export declare type GraphQLObject = {

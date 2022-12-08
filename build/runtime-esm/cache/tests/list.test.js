@@ -1408,11 +1408,7 @@ test("append operation", function() {
         operations: [
           {
             action: "insert",
-            list: "All_Users",
-            parentID: {
-              kind: "String",
-              value: cache._internal_unstable.id("User", "1")
-            }
+            list: "All_Users"
           }
         ],
         fields: {
@@ -1429,7 +1425,7 @@ test("append operation", function() {
       }
     }
   });
-  expect([...cache.list("All_Users", cache._internal_unstable.id("User", "1"))]).toHaveLength(1);
+  expect([...cache.list("All_Users", "1")]).toHaveLength(1);
 });
 test("append from list", function() {
   const cache = new Cache(config);
@@ -1489,11 +1485,7 @@ test("append from list", function() {
         operations: [
           {
             action: "insert",
-            list: "All_Users",
-            parentID: {
-              kind: "String",
-              value: cache._internal_unstable.id("User", "1")
-            }
+            list: "All_Users"
           }
         ],
         fields: {
@@ -1508,7 +1500,7 @@ test("append from list", function() {
       newUser: [{ id: "3" }, { id: "4" }]
     }
   });
-  expect([...cache.list("All_Users", cache._internal_unstable.id("User", "1"))]).toHaveLength(2);
+  expect([...cache.list("All_Users", "1")]).toHaveLength(2);
 });
 test("toggle list", function() {
   const cache = new Cache(config);
@@ -1587,11 +1579,7 @@ test("toggle list", function() {
       operations: [
         {
           action: "toggle",
-          list: "All_Users",
-          parentID: {
-            kind: "String",
-            value: cache._internal_unstable.id("User", "1")
-          }
+          list: "All_Users"
         }
       ],
       fields: {
@@ -1603,19 +1591,11 @@ test("toggle list", function() {
     }
   };
   cache.write({ selection: toggleSelection, data: { newUser: { id: "3" } } });
-  expect([...cache.list("All_Users", cache._internal_unstable.id("User", "1"))]).toEqual([
-    "User:5",
-    "User:3"
-  ]);
+  expect([...cache.list("All_Users", "1")]).toEqual(["User:5", "User:3"]);
   cache.write({ selection: toggleSelection, data: { newUser: { id: "3" } } });
-  expect([...cache.list("All_Users", cache._internal_unstable.id("User", "1"))]).toEqual([
-    "User:5"
-  ]);
+  expect([...cache.list("All_Users", "1")]).toEqual(["User:5"]);
   cache.write({ selection: toggleSelection, data: { newUser: { id: "3" } } });
-  expect([...cache.list("All_Users", cache._internal_unstable.id("User", "1"))]).toEqual([
-    "User:5",
-    "User:3"
-  ]);
+  expect([...cache.list("All_Users", "1")]).toEqual(["User:5", "User:3"]);
 });
 test("append when operation", function() {
   const cache = new Cache(config);
@@ -1682,10 +1662,6 @@ test("append when operation", function() {
           {
             action: "insert",
             list: "All_Users",
-            parentID: {
-              kind: "String",
-              value: cache._internal_unstable.id("User", "1")
-            },
             when: {
               must: {
                 value: "not-foo"
@@ -1707,7 +1683,7 @@ test("append when operation", function() {
       }
     }
   });
-  expect([...cache.list("All_Users", cache._internal_unstable.id("User", "1"))]).toHaveLength(0);
+  expect([...cache.list("All_Users", "1")]).toHaveLength(0);
 });
 test("prepend when operation", function() {
   const cache = new Cache(config);
@@ -1774,10 +1750,6 @@ test("prepend when operation", function() {
           {
             action: "insert",
             list: "All_Users",
-            parentID: {
-              kind: "String",
-              value: cache._internal_unstable.id("User", "1")
-            },
             position: "first",
             when: {
               must: {
@@ -1800,7 +1772,7 @@ test("prepend when operation", function() {
       }
     }
   });
-  expect([...cache.list("All_Users", cache._internal_unstable.id("User", "1"))]).toHaveLength(0);
+  expect([...cache.list("All_Users", "1")]).toHaveLength(0);
 });
 test("prepend operation", function() {
   const cache = new Cache(config);
@@ -1881,10 +1853,6 @@ test("prepend operation", function() {
           {
             action: "insert",
             list: "All_Users",
-            parentID: {
-              kind: "String",
-              value: cache._internal_unstable.id("User", "1")
-            },
             position: "first"
           }
         ],
@@ -1902,10 +1870,7 @@ test("prepend operation", function() {
       }
     }
   });
-  expect([...cache.list("All_Users", cache._internal_unstable.id("User", "1"))]).toEqual([
-    "User:3",
-    "User:2"
-  ]);
+  expect([...cache.list("All_Users", "1")]).toEqual(["User:3", "User:2"]);
 });
 test("remove operation", function() {
   const cache = new Cache(config);
@@ -1980,11 +1945,7 @@ test("remove operation", function() {
         operations: [
           {
             action: "remove",
-            list: "All_Users",
-            parentID: {
-              kind: "String",
-              value: cache._internal_unstable.id("User", "1")
-            }
+            list: "All_Users"
           }
         ],
         fields: {
@@ -2001,7 +1962,7 @@ test("remove operation", function() {
       }
     }
   });
-  expect([...cache.list("All_Users", cache._internal_unstable.id("User", "1"))]).toHaveLength(0);
+  expect([...cache.list("All_Users", "1")]).toHaveLength(0);
 });
 test("remove operation from list", function() {
   const cache = new Cache(config);
@@ -2079,11 +2040,7 @@ test("remove operation from list", function() {
         operations: [
           {
             action: "remove",
-            list: "All_Users",
-            parentID: {
-              kind: "String",
-              value: cache._internal_unstable.id("User", "1")
-            }
+            list: "All_Users"
           }
         ],
         fields: {
@@ -2098,7 +2055,7 @@ test("remove operation from list", function() {
       newUser: [{ id: "2" }, { id: "3" }]
     }
   });
-  expect([...cache.list("All_Users", cache._internal_unstable.id("User", "1"))]).toHaveLength(0);
+  expect([...cache.list("All_Users", "1")]).toHaveLength(0);
 });
 test("delete operation", function() {
   const cache = new Cache(config);
@@ -2190,7 +2147,7 @@ test("delete operation", function() {
       }
     }
   });
-  expect([...cache.list("All_Users", cache._internal_unstable.id("User", "1"))]).toHaveLength(0);
+  expect([...cache.list("All_Users", "1")]).toHaveLength(0);
   expect(cache._internal_unstable.storage.topLayer.operations["User:2"].deleted).toBeTruthy();
 });
 test("delete operation from list", function() {
@@ -2286,7 +2243,7 @@ test("delete operation from list", function() {
       }
     }
   });
-  expect([...cache.list("All_Users", cache._internal_unstable.id("User", "1"))]).toHaveLength(0);
+  expect([...cache.list("All_Users", "1")]).toHaveLength(0);
   expect(cache._internal_unstable.storage.topLayer.operations["User:2"].deleted).toBeTruthy();
   expect(cache._internal_unstable.storage.topLayer.operations["User:3"].deleted).toBeTruthy();
 });
@@ -2421,7 +2378,7 @@ test("delete operation from connection", function() {
       }
     }
   });
-  expect([...cache.list("All_Users", cache._internal_unstable.id("User", "1"))]).toHaveLength(0);
+  expect([...cache.list("All_Users", "1")]).toHaveLength(0);
   expect(cache._internal_unstable.storage.topLayer.operations["User:2"].deleted).toBeTruthy();
 });
 test("disabled linked lists update", function() {
@@ -2832,11 +2789,7 @@ test("list operations fail silently", function() {
           operations: [
             {
               action: "insert",
-              list: "All_Users",
-              parentID: {
-                kind: "String",
-                value: cache._internal_unstable.id("User", "1")
-              }
+              list: "All_Users"
             }
           ],
           fields: {
@@ -3049,10 +3002,66 @@ test("parentID must be passed if there are multiple instances of a list handler"
     },
     {}
   );
-  expect(() => cache.list("All_Users")).toThrow();
-  expect(cache.list("All_Users", "1").lists[0].recordID).toEqual(
-    cache._internal_unstable.id("User", "1")
-  );
+  const writeSelectionNoParentID = {
+    user: {
+      type: "User",
+      keyRaw: "user",
+      operations: [
+        {
+          action: "insert",
+          list: "All_Users"
+        }
+      ],
+      fields: {
+        id: {
+          type: "ID",
+          keyRaw: "id"
+        },
+        firstName: {
+          type: "String",
+          keyRaw: "firstName"
+        }
+      }
+    }
+  };
+  const writeSelectionWithParentID = {
+    user: {
+      type: "User",
+      keyRaw: "user",
+      operations: [
+        {
+          action: "insert",
+          list: "All_Users",
+          parentID: {
+            kind: "String",
+            value: "1"
+          }
+        }
+      ],
+      fields: {
+        id: {
+          type: "ID",
+          keyRaw: "id"
+        },
+        firstName: {
+          type: "String",
+          keyRaw: "firstName"
+        }
+      }
+    }
+  };
+  cache.write({
+    selection: writeSelectionNoParentID,
+    data: { user: { id: "2", firstName: "test" } }
+  });
+  expect([...cache.list("All_Users", "1")]).toHaveLength(1);
+  expect([...cache.list("All_Users", "2")]).toHaveLength(0);
+  cache.write({
+    selection: writeSelectionWithParentID,
+    data: { user: { id: "2", firstName: "test" } }
+  });
+  expect([...cache.list("All_Users", "1")]).toHaveLength(2);
+  expect([...cache.list("All_Users", "2")]).toHaveLength(0);
 });
 test("append in abstract list", function() {
   const cache = new Cache(config);
@@ -3296,4 +3305,85 @@ test("list operations on interface fields without a well defined parent update t
       ]
     }
   });
+});
+test("parentID ignores single lists that don't match", function() {
+  const cache = new Cache(config);
+  cache.write({
+    selection: {
+      viewer: {
+        type: "User",
+        keyRaw: "viewer",
+        fields: {
+          id: {
+            type: "ID",
+            keyRaw: "id"
+          }
+        }
+      }
+    },
+    data: {
+      viewer: {
+        id: "1"
+      }
+    }
+  });
+  cache.subscribe(
+    {
+      rootType: "User",
+      selection: {
+        friends: {
+          type: "User",
+          keyRaw: "friends",
+          list: {
+            name: "All_Users",
+            connection: false,
+            type: "User"
+          },
+          fields: {
+            id: {
+              type: "ID",
+              keyRaw: "id"
+            },
+            firstName: {
+              type: "String",
+              keyRaw: "firstName"
+            }
+          }
+        }
+      },
+      parentID: cache._internal_unstable.id("User", "1"),
+      set: vi.fn()
+    },
+    {}
+  );
+  cache.write({
+    selection: {
+      newUser: {
+        type: "User",
+        keyRaw: "newUser",
+        operations: [
+          {
+            action: "insert",
+            list: "All_Users",
+            parentID: {
+              kind: "String",
+              value: "2"
+            }
+          }
+        ],
+        fields: {
+          id: {
+            type: "ID",
+            keyRaw: "id"
+          }
+        }
+      }
+    },
+    data: {
+      newUser: {
+        id: "3"
+      }
+    }
+  });
+  expect([...cache.list("All_Users", "1")]).toHaveLength(0);
 });
